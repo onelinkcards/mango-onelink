@@ -1,0 +1,109 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+// Shop-specific components
+import Hero from './shops/honeys-fresh-n-frozen/components/Hero'
+import About from './shops/honeys-fresh-n-frozen/components/About'
+import MenuPreview from './shops/honeys-fresh-n-frozen/components/MenuPreview'
+import Services from './shops/honeys-fresh-n-frozen/components/Services'
+import ContactCard from './shops/honeys-fresh-n-frozen/components/ContactCard'
+// Shop-specific components (Gallery and Reviews)
+import Gallery from './shops/honeys-fresh-n-frozen/components/Gallery'
+import InstagramFeed from './shops/honeys-fresh-n-frozen/components/InstagramFeed'
+import GoogleReviews from './shops/honeys-fresh-n-frozen/components/GoogleReviews'
+// Shared components
+import Footer from './components/Footer'
+import BackToTop from './components/BackToTop'
+import LoadingScreen from './components/LoadingScreen'
+
+export default function Home() {
+  const [showLoading, setShowLoading] = useState(true)
+
+  useEffect(() => {
+    // Check if coming from any inner page - skip loading screen and return to the main card
+    if (typeof window !== 'undefined') {
+      const fromGallery = sessionStorage.getItem('fromGallery')
+      const fromMenu = sessionStorage.getItem('fromMenu')
+      const fromReviews = sessionStorage.getItem('fromReviews')
+
+      if (fromGallery === 'true' || fromMenu === 'true' || fromReviews === 'true') {
+        setShowLoading(false)
+        sessionStorage.removeItem('fromGallery')
+        sessionStorage.removeItem('fromMenu')
+        sessionStorage.removeItem('fromReviews')
+
+        setTimeout(() => {
+          if (window.location.hash) {
+            window.history.replaceState(null, '', window.location.pathname)
+          }
+          window.scrollTo(0, 0)
+        }, 50)
+        return
+      }
+    }
+
+    // Show loading screen on every page load/refresh for a short branded moment
+    const timer = setTimeout(() => {
+      setShowLoading(false)
+    }, 1800)
+
+    // Fallback: ensure loading screen always disappears quickly
+    const fallbackTimer = setTimeout(() => {
+      setShowLoading(false)
+    }, 2600)
+
+    return () => {
+      clearTimeout(timer)
+      clearTimeout(fallbackTimer)
+    }
+  }, [])
+
+  // Handle hash navigation after loading
+  useEffect(() => {
+    if (!showLoading && typeof window !== 'undefined') {
+      if (window.location.hash === '#gallery' || window.location.hash === '#menu' || window.location.hash === '#reviews') {
+        window.history.replaceState(null, '', window.location.pathname)
+        window.scrollTo(0, 0)
+      }
+    }
+  }, [showLoading])
+
+  return (
+    <>
+      <AnimatePresence>
+        {showLoading && (
+          <LoadingScreen key="loading" />
+        )}
+      </AnimatePresence>
+      {!showLoading && (
+        <motion.main
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+          className="min-h-screen pb-16 relative z-10 overflow-hidden pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]"
+          style={{ backgroundColor: '#1a1a1a' }}
+        >
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -top-16 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#FBEC89]/10 blur-3xl" />
+            <div className="absolute top-[22rem] -left-20 h-64 w-64 rounded-full bg-mango-green/15 blur-3xl" />
+            <div className="absolute bottom-[18rem] right-[-5rem] h-72 w-72 rounded-full bg-[#FBEC89]/10 blur-3xl" />
+          </div>
+
+          <div className="relative z-10">
+            <Hero />
+            <About />
+            <MenuPreview />
+            <Services />
+            <Gallery />
+            <GoogleReviews />
+            <InstagramFeed />
+            <ContactCard />
+            <Footer />
+            <BackToTop />
+          </div>
+        </motion.main>
+      )}
+    </>
+  )
+}
