@@ -330,19 +330,27 @@ export default function Hero() {
         }
         faceInfo={
           <div
-            className="bg-gradient-to-br from-mango-green to-mango-greenSoft backdrop-blur-md rounded-[24px] shadow-2xl border-2 border-mango-green/50 cursor-pointer relative h-full overflow-hidden flex flex-col"
-            style={{ minHeight: 'min(580px, 85dvh)', boxSizing: 'border-box' }}
-            onClick={handleFlip}
+            className="bg-gradient-to-br from-mango-green to-mango-greenSoft backdrop-blur-md rounded-[24px] shadow-2xl border-2 border-mango-green/50 cursor-pointer relative h-full overflow-hidden flex flex-col touch-manipulation"
+            style={{ minHeight: 'min(580px, 85dvh)', boxSizing: 'border-box', WebkitTapHighlightColor: 'transparent' }}
+            onClick={(e) => {
+              const t = e.target as HTMLElement
+              if (t.closest('[data-no-info-flip]')) return
+              handleFlip(e, true)
+            }}
           >
-            {/* Tap to Return – top-right inside container */}
+            {/* Tap to Return – must use forceFlip; plain handleFlip ignores all buttons */}
             <motion.button
+              type="button"
               initial={{ opacity: 0 }}
               animate={currentFace === 'info' ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.3, delay: 0.3 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={(e) => { e.stopPropagation(); handleFlip(e); }}
-              className="absolute top-4 right-4 z-10 text-xs text-white font-semibold bg-white/20 hover:bg-white/30 px-3 py-2 rounded-full backdrop-blur-md shadow-lg cursor-pointer transition-all flex items-center gap-1.5 touch-manipulation"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleFlip(e, true)
+              }}
+              className="absolute top-4 right-4 z-20 text-xs text-white font-semibold bg-white/20 hover:bg-white/30 px-3 py-2 rounded-full backdrop-blur-md shadow-lg cursor-pointer transition-all flex items-center gap-1.5 touch-manipulation"
               style={{ WebkitTapHighlightColor: 'transparent' }}
               aria-label={t('tapToReturn')}
             >
@@ -431,6 +439,7 @@ export default function Hero() {
                 {/* Bottom touch area: Open in Maps – min 44px height, clear gap above */}
                 <div className="w-full flex flex-col items-center mt-2 pt-2" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
                   <motion.a
+                    data-no-info-flip
                     href={`https://www.google.com/maps?q=${encodeURIComponent(shopConfig.contact.mapQuery)}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -440,10 +449,11 @@ export default function Hero() {
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      handleFlip(e, true)
-                      setTimeout(() => {
-                        window.open(`https://www.google.com/maps?q=${encodeURIComponent(shopConfig.contact.mapQuery)}`, '_blank', 'noopener,noreferrer')
-                      }, 700)
+                      window.open(
+                        `https://www.google.com/maps?q=${encodeURIComponent(shopConfig.contact.mapQuery)}`,
+                        '_blank',
+                        'noopener,noreferrer'
+                      )
                     }}
                     style={{ fontSize: 'clamp(13px, 3.5vw, 15px)', WebkitTapHighlightColor: 'transparent' }}
                   >
