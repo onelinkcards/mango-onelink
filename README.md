@@ -80,6 +80,8 @@ Honey-Fresh-N-Frozen-B2C/
 
 ✅ **COMPLETE** - All B2C files, assets, and dependencies included. Ready for separate deployment.
 
+Latest update: order flow UI and filter UX refinements are included in the main app.
+
 ---
 
 *Year: 2025*
