@@ -165,24 +165,21 @@ export default function CheckoutPage() {
         </section>
       </div>
 
-      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[500px] z-50">
-        <div className="rounded-[26px] border border-slate-200 bg-white/95 backdrop-blur-md p-2.5 shadow-[0_16px_36px_rgba(15,23,42,0.18)]">
-          <div className="flex items-center justify-between text-sm px-2 pb-2 text-slate-600">
-            <span>Pay after order confirmation</span>
-            <span className="font-medium">UPI only</span>
-          </div>
-          <button
-            onClick={orderNow}
-            disabled={!name.trim() || !mobile.trim() || !address.trim() || cart.length === 0}
-            className="w-full h-14 rounded-full bg-[#E23744] text-white flex items-center justify-between px-4 shadow-[0_10px_22px_rgba(226,55,68,0.45)] disabled:opacity-50"
-          >
-            <span className="text-left">
-              <span className="block text-[11px] uppercase tracking-wide text-white/90">Total</span>
-              <span className="block text-lg font-bold leading-none">₹{total.toFixed(2)}</span>
-            </span>
-            <span className="text-base font-semibold">Place Order</span>
-          </button>
-        </div>
+      <div className="fixed left-4 right-4 bottom-4 z-[9999] max-w-[430px] mx-auto">
+        <button
+          onClick={orderNow}
+          disabled={!name.trim() || !mobile.trim() || !address.trim() || cart.length === 0}
+          className="w-full h-[62px] rounded-full bg-[#E23744] text-white flex items-center justify-between px-5 shadow-[0_14px_30px_rgba(226,55,68,0.35)] border border-white/20 disabled:opacity-50"
+        >
+          <span className="text-left">
+            <span className="block text-[11px] uppercase tracking-wide text-white/90">Total</span>
+            <span className="block text-lg font-bold leading-none">₹{total.toFixed(2)}</span>
+          </span>
+          <span className="text-right">
+            <span className="block text-[15px] font-semibold">Place Order</span>
+            <span className="block text-[10px] text-white/90">UPI only</span>
+          </span>
+        </button>
       </div>
     </main>
   )
